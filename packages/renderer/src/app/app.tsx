@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState } from 'react'
 
 export function App() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0)
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
@@ -18,5 +18,5 @@ export function App() {
         Click on the Vite and React logos to learn more
       </p>
     </div>
-  );
+  )
 }
