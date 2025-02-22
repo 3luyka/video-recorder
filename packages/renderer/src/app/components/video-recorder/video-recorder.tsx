@@ -4,12 +4,13 @@ import { useMediaStream } from '../../providers/media-stream-provider'
 import { RecorderControls } from './recorder-controls'
 import { RecorderView } from './recorder-view'
 import { useEffect } from 'react'
+import { MIME_TYPE } from '../../../config'
 
 type VideoRecorderProps = {
-  onSave: ({ video, duration }: { video: Blob; duration: number }) => void
+  onComplete: ({ video, duration }: { video: Blob; duration: number }) => void
 }
 
-export const VideoRecorder = ({ onSave }: VideoRecorderProps) => {
+export const VideoRecorder = ({ onComplete }: VideoRecorderProps) => {
   const { stream, size } = useMediaStream()
 
   const { canvasRef } = useCanvasRenderer({
@@ -31,9 +32,9 @@ export const VideoRecorder = ({ onSave }: VideoRecorderProps) => {
 
   useEffect(() => {
     if (recordedChunks.length > 0 && !isRecording) {
-      const video = new Blob(recordedChunks, { type: 'video/webm' })
+      const video = new Blob(recordedChunks, { type: MIME_TYPE })
 
-      onSave({ video, duration })
+      onComplete({ video, duration })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
