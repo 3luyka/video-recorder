@@ -1,22 +1,13 @@
-import { useState } from 'react'
+import { MediaPermissionsMiddleware } from './components/media-permissions-middleware'
 
 export function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+    <MediaPermissionsMiddleware>
+      <div className="flex h-screen items-center justify-center bg-gray-100">
+        <div className="w-full max-w-4xl rounded-lg bg-white p-6 shadow-lg">
+          Good!
+        </div>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    </MediaPermissionsMiddleware>
   )
 }

@@ -1,28 +1,37 @@
-import pkg from './package.json' with {type: 'json'};
-import mapWorkspaces from '@npmcli/map-workspaces';
-import {join} from 'node:path';
-import {pathToFileURL} from 'node:url';
+import pkg from "./package.json" with { type: "json" };
+import mapWorkspaces from "@npmcli/map-workspaces";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 
 export default /** @type import('electron-builder').Configuration */
 ({
   directories: {
-    output: 'dist',
-    buildResources: 'buildResources',
+    output: "dist",
+    buildResources: "buildResources",
   },
   generateUpdatesFilesForAllChannels: true,
+  mac: {
+    hardenedRuntime: true,
+    extendInfo: {
+      NSCameraUsageDescription:
+        "This app needs access to the camera to record video.",
+      NSMicrophoneUsageDescription:
+        "This app needs access to the microphone to record audio.",
+    },
+  },
   linux: {
-    target: ['deb'],
+    target: ["deb"],
   },
   /**
    * It is recommended to avoid using non-standard characters such as spaces in artifact names,
    * as they can unpredictably change during deployment, making them impossible to locate and download for update.
    */
-  artifactName: '${productName}-${version}-${os}-${arch}.${ext}',
+  artifactName: "${productName}-${version}-${os}-${arch}.${ext}",
   files: [
-    'LICENSE*',
-    'packages/entry-point.js',
-    '!node_modules/@vite-electron-builder/**',
-    ...await getListOfFilesFromEachWorkspace(),
+    "LICENSE*",
+    "packages/entry-point.js",
+    "!node_modules/@vite-electron-builder/**",
+    ...(await getListOfFilesFromEachWorkspace()),
   ],
 });
 
@@ -85,7 +94,6 @@ export default /** @type import('electron-builder').Configuration */
  * ```
  */
 async function getListOfFilesFromEachWorkspace() {
-
   /**
    * @type {Map<string, string>}
    */
@@ -97,12 +105,14 @@ async function getListOfFilesFromEachWorkspace() {
   const allFilesToInclude = [];
 
   for (const [name, path] of workspaces) {
-    const pkgPath = join(path, 'package.json');
-    const {default: workspacePkg} = await import(pathToFileURL(pkgPath), {with: {type: 'json'}});
+    const pkgPath = join(path, "package.json");
+    const { default: workspacePkg } = await import(pathToFileURL(pkgPath), {
+      with: { type: "json" },
+    });
 
-    let patterns = workspacePkg.files || ['dist/**', 'package.json'];
+    let patterns = workspacePkg.files || ["dist/**", "package.json"];
 
-    patterns = patterns.map(p => join('node_modules', name, p));
+    patterns = patterns.map((p) => join("node_modules", name, p));
     allFilesToInclude.push(...patterns);
   }
 
