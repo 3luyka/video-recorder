@@ -11,7 +11,8 @@ export default /** @type import('electron-builder').Configuration */
   },
   generateUpdatesFilesForAllChannels: true,
   mac: {
-    hardenedRuntime: true,
+    appId: "com.example.app",
+    hardenedRuntime: false,
     extendInfo: {
       NSCameraUsageDescription:
         "This app needs access to the camera to record video.",
