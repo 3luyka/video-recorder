@@ -50,7 +50,7 @@ export const InputSourceSelector: React.FC = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-12 left-0 z-10 w-64 rounded-lg bg-white p-4 shadow-lg">
+        <div className="absolute top-12 left-0 z-10 flex w-64 flex-col gap-3 rounded-lg bg-white p-4 shadow-lg">
           {videoDevices.length > 0 && (
             <Select
               label="Camera"

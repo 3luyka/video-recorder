@@ -27,10 +27,10 @@ export function App() {
     setData({ video, duration, url })
   }
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!data) return
 
-    await saveFile(data.video)
+    saveFile(data.video)
   }
 
   const handleCancel = () => {
@@ -39,7 +39,7 @@ export function App() {
 
   useEffect(() => {
     return () => {
-      if (!data?.url) {
+      if (!data) {
         return
       }
 

@@ -1,12 +1,6 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-  useRef,
-} from 'react'
+import { createContext, useContext, ReactNode } from 'react'
 import { useMediaDevices } from '../hooks/use-media-devices'
+import { useStream } from '../hooks/use-stream'
 
 type MediaDevice = {
   deviceId: string
@@ -35,14 +29,6 @@ type MediaStreamProviderProps = {
 }
 
 export const MediaStreamProvider = ({ children }: MediaStreamProviderProps) => {
-  const [stream, setStream] = useState<MediaStream | null>(null)
-  const [streamError, setStreamError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [size, setSize] = useState<{ width: number; height: number } | null>(
-    null
-  )
-
   const {
     videoDevices,
     audioDevices,
@@ -53,76 +39,14 @@ export const MediaStreamProvider = ({ children }: MediaStreamProviderProps) => {
     error: devicesError,
   } = useMediaDevices()
 
-  const startStream = async () => {
-    try {
-      setIsLoading(true)
-      setStreamError(null)
-
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: selectedVideoDevice
-          ? { deviceId: { exact: selectedVideoDevice } }
-          : true,
-        audio: selectedAudioDevice
-          ? { deviceId: { exact: selectedAudioDevice } }
-          : true,
-      })
-
-      videoRef.current = document.createElement('video')
-      videoRef.current.srcObject = mediaStream
-      videoRef.current.playsInline = true
-      videoRef.current.muted = true
-
-      videoRef.current.onloadedmetadata = () => {
-        if (!videoRef.current) {
-          return
-        }
-
-        setSize({
-          width: videoRef.current.videoWidth,
-          height: videoRef.current.videoHeight,
-        })
-      }
-
-      setStream(mediaStream)
-    } catch (err) {
-      setStreamError(
-        err instanceof Error ? err.message : 'Failed to start media stream'
-      )
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const stopStream = () => {
-    if (videoRef.current) {
-      videoRef.current.srcObject = null
-    }
-
-    if (!stream) {
-      return
-    }
-
-    stream.getTracks().forEach((track) => track.stop())
-
-    setStream(null)
-  }
-
-  useEffect(() => {
-    if (!stream) {
-      return
-    }
-
-    stopStream()
-    startStream()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedVideoDevice, selectedAudioDevice])
-
-  useEffect(() => {
-    startStream()
-
-    return stopStream
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const {
+    stream,
+    error: streamError,
+    isLoading,
+    startStream,
+    stopStream,
+    size,
+  } = useStream(selectedVideoDevice, selectedAudioDevice)
 
   return (
     <MediaStreamContext.Provider
