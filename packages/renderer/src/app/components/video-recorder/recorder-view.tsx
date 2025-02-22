@@ -1,5 +1,6 @@
 import React from 'react'
 import { RecorderDuration } from './recorder-duration'
+import { InputSourceSelector } from './input-source-selector'
 
 type RecorderViewProps = {
   isRecording: boolean
@@ -18,5 +19,11 @@ export const RecorderView: React.FC<RecorderViewProps> = ({
     <div className="absolute top-4 right-4">
       <RecorderDuration {...{ duration, isRecording }} />
     </div>
+
+    {!isRecording && (
+      <div className="absolute top-4 left-4">
+        <InputSourceSelector />
+      </div>
+    )}
   </div>
 )

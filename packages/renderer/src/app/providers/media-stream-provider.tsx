@@ -6,6 +6,12 @@ import {
   useEffect,
   useRef,
 } from 'react'
+import { useMediaDevices } from '../hooks/use-media-devices'
+
+type MediaDevice = {
+  deviceId: string
+  label: string
+}
 
 type MediaStreamContextType = {
   stream: MediaStream | null
@@ -14,6 +20,12 @@ type MediaStreamContextType = {
   startStream(): void
   stopStream(): void
   size: { width: number; height: number } | null
+  videoDevices: MediaDevice[]
+  audioDevices: MediaDevice[]
+  selectedVideoDevice: string | null
+  selectedAudioDevice: string | null
+  setSelectedVideoDevice(deviceId: string): void
+  setSelectedAudioDevice(deviceId: string): void
 }
 
 const MediaStreamContext = createContext<MediaStreamContextType | null>(null)
@@ -24,25 +36,41 @@ type MediaStreamProviderProps = {
 
 export const MediaStreamProvider = ({ children }: MediaStreamProviderProps) => {
   const [stream, setStream] = useState<MediaStream | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [streamError, setStreamError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const [size, setSize] = useState<{ width: number; height: number } | null>(
     null
   )
 
+  const {
+    videoDevices,
+    audioDevices,
+    selectedVideoDevice,
+    selectedAudioDevice,
+    setSelectedVideoDevice,
+    setSelectedAudioDevice,
+    error: devicesError,
+  } = useMediaDevices()
+
   const startStream = async () => {
     try {
       setIsLoading(true)
-      setError(null)
+      setStreamError(null)
 
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
+        video: selectedVideoDevice
+          ? { deviceId: { exact: selectedVideoDevice } }
+          : true,
+        audio: selectedAudioDevice
+          ? { deviceId: { exact: selectedAudioDevice } }
+          : true,
       })
 
       videoRef.current = document.createElement('video')
       videoRef.current.srcObject = mediaStream
+      videoRef.current.playsInline = true
+      videoRef.current.muted = true
 
       videoRef.current.onloadedmetadata = () => {
         if (!videoRef.current) {
@@ -57,7 +85,7 @@ export const MediaStreamProvider = ({ children }: MediaStreamProviderProps) => {
 
       setStream(mediaStream)
     } catch (err) {
-      setError(
+      setStreamError(
         err instanceof Error ? err.message : 'Failed to start media stream'
       )
     } finally {
@@ -80,6 +108,16 @@ export const MediaStreamProvider = ({ children }: MediaStreamProviderProps) => {
   }
 
   useEffect(() => {
+    if (!stream) {
+      return
+    }
+
+    stopStream()
+    startStream()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedVideoDevice, selectedAudioDevice])
+
+  useEffect(() => {
     startStream()
 
     return stopStream
@@ -90,11 +128,17 @@ export const MediaStreamProvider = ({ children }: MediaStreamProviderProps) => {
     <MediaStreamContext.Provider
       value={{
         stream,
-        error,
+        error: streamError || devicesError,
         isLoading,
         startStream,
         stopStream,
         size,
+        videoDevices,
+        audioDevices,
+        selectedVideoDevice,
+        selectedAudioDevice,
+        setSelectedVideoDevice,
+        setSelectedAudioDevice,
       }}
     >
       {children}
