@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { MIME_TYPE } from '../../config'
 
 type UseMediaRecorderProps = {
@@ -11,6 +11,8 @@ export const useMediaRecorder = ({
   canvasRef,
 }: UseMediaRecorderProps) => {
   const [isRecording, setIsRecording] = useState(false)
+  const [duration, setDuration] = useState(0)
+  const recordingStartTime = useRef<number | null>(null)
   const [recordedChunks, setRecordedChunks] = useState<Blob[]>([])
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
 
@@ -48,10 +50,34 @@ export const useMediaRecorder = ({
     }
   }
 
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null
+
+    if (isRecording) {
+      recordingStartTime.current = Date.now()
+
+      intervalId = setInterval(() => {
+        const elapsed = Date.now() - (recordingStartTime.current || 0)
+
+        setDuration(Math.floor(elapsed / 1000))
+      }, 1000)
+    } else {
+      recordingStartTime.current = null
+      setDuration(0)
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId)
+      }
+    }
+  }, [isRecording])
+
   return {
     isRecording,
     recordedChunks,
     startRecording,
     stopRecording,
+    duration,
   }
 }
