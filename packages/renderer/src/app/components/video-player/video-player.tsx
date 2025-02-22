@@ -9,7 +9,6 @@ import { useVideoPlayer } from './_hooks/use-video-player'
 import { useVideoControls } from './_hooks/use-video-controls'
 import { PlayerActions } from './player-actions'
 import { PlayerView } from './player-view'
-import { useMediaStream } from '../../providers/media-stream-provider'
 
 type VideoPlayerProps = {
   src: string
@@ -26,8 +25,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   onSave,
   isSaving,
 }) => {
-  const { size } = useMediaStream()
-
   const { volume, isMuted, toggleMute, handleVolumeChange } = useVideoVolume()
   const { isFullscreen, toggleFullscreen } = useVideoFullscreen()
 
@@ -46,27 +43,11 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     videoRef.current.currentTime = position * duration
   }
 
-  // const handleLoadedMetadata = () => {
-  //   if (!videoRef.current) return
-  //   setVideoDimensions({
-  //     width: videoRef.current.videoWidth,
-  //     height: videoRef.current.videoHeight,
-  //   })
-  // }
-
-  const containerStyle = {
-    maxWidth: size?.width ? `${size.width}px` : '64rem',
-    maxHeight: size?.height ? `${size.height}px` : 'auto',
-  }
-
   return (
-    <div
-      className="w-full rounded-lg bg-white p-6 shadow-lg"
-      style={containerStyle}
-    >
+    <div>
       <div className="flex flex-col gap-6">
         <div
-          className="group relative h-full w-full"
+          className="group relative h-full w-full overflow-hidden rounded-xl"
           onMouseMove={showControls}
           onMouseLeave={hideControls}
         >

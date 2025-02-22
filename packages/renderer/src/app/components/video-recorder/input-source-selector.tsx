@@ -46,7 +46,7 @@ export const InputSourceSelector: React.FC = () => {
         className="flex cursor-pointer items-center gap-2 rounded-full bg-gray-900/80 px-3 py-1.5 text-white backdrop-blur-sm transition-all duration-300 hover:bg-gray-900/90"
       >
         <Settings className="h-4 w-4" />
-        <span className="text-sm">Input Settings</span>
+        <span className="text-sm">Settings</span>
       </button>
 
       {isOpen && (

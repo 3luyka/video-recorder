@@ -41,7 +41,7 @@ export const VideoRecorder = ({ onComplete }: VideoRecorderProps) => {
   }, [recordedChunks])
 
   return (
-    <div className="w-full max-w-4xl rounded-lg bg-white p-6 shadow-lg">
+    <div>
       <RecorderView
         {...{
           isRecording,

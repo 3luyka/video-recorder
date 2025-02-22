@@ -52,17 +52,19 @@ export function App() {
       <MediaPermissionsMiddleware>
         <MediaStreamProvider>
           <div className="flex h-screen items-center justify-center bg-gray-100">
-            {data ? (
-              <VideoPlayer
-                {...{ isSaving }}
-                src={data.url}
-                duration={data.duration}
-                onSave={handleSave}
-                onCancel={handleCancel}
-              />
-            ) : (
-              <VideoRecorder onComplete={handleRecordingComplete} />
-            )}
+            <div className="w-full max-w-4xl rounded-lg bg-white p-6 shadow-lg">
+              {data ? (
+                <VideoPlayer
+                  {...{ isSaving }}
+                  src={data.url}
+                  duration={data.duration}
+                  onSave={handleSave}
+                  onCancel={handleCancel}
+                />
+              ) : (
+                <VideoRecorder onComplete={handleRecordingComplete} />
+              )}
+            </div>
           </div>
         </MediaStreamProvider>
       </MediaPermissionsMiddleware>

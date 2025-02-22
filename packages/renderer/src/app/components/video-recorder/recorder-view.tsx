@@ -14,7 +14,7 @@ export const RecorderView: React.FC<RecorderViewProps> = ({
   canvasRef,
 }) => (
   <div className="relative overflow-hidden rounded-2xl bg-gray-800 shadow-2xl ring-1 ring-white/10">
-    <canvas ref={canvasRef} className="h-full w-full" />
+    <canvas ref={canvasRef} className="w-full" />
 
     <div className="absolute top-4 right-4">
       <RecorderDuration {...{ duration, isRecording }} />

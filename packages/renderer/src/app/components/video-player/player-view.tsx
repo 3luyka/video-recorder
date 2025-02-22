@@ -22,7 +22,7 @@ export const PlayerView: React.FC<PlayerViewProps> = ({
 
       <canvas
         ref={canvasRef}
-        className="h-full w-full cursor-pointer rounded-xl bg-black"
+        className="w-full cursor-pointer bg-black"
         onClick={onPlay}
         onDoubleClick={onFullscreen}
       />
