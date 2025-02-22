@@ -13,7 +13,7 @@ export const VideoRecorder = () => {
 
   const { isRecording, startRecording, stopRecording } = useMediaRecorder({
     stream,
-    canvas: canvasRef.current,
+    canvasRef,
   })
 
   const toggleRecording = () => {

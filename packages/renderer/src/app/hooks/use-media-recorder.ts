@@ -1,21 +1,23 @@
 import { useRef, useState } from 'react'
+import { MIME_TYPE } from '../../config'
 
 type UseMediaRecorderProps = {
   stream: MediaStream | null
-  canvas: HTMLCanvasElement | null
+  canvasRef: React.RefObject<HTMLCanvasElement | null>
 }
 
-const MIME_TYPE = 'video/webm'
-
-export const useMediaRecorder = ({ stream, canvas }: UseMediaRecorderProps) => {
+export const useMediaRecorder = ({
+  stream,
+  canvasRef,
+}: UseMediaRecorderProps) => {
   const [isRecording, setIsRecording] = useState(false)
   const [recordedChunks, setRecordedChunks] = useState<Blob[]>([])
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
 
   const startRecording = () => {
-    if (!stream || !canvas) return
+    if (!stream || !canvasRef.current) return
 
-    const outputStream = canvas.captureStream(60)
+    const outputStream = canvasRef.current.captureStream(60)
 
     const combinedStream = new MediaStream([
       ...outputStream.getTracks(),
