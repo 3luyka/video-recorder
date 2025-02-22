@@ -1,4 +1,5 @@
 import { ipcRenderer } from "electron";
+import mime from "mime-types";
 
 export type MediaAccessStatus =
   | "not-determined"
@@ -47,6 +48,15 @@ export async function requestMediaPermissions(): Promise<MediaPermissionRequest>
   }
 }
 
-export async function saveRecording(buffer: ArrayBuffer, fileName: string) {
-  return await ipcRenderer.invoke("save-recording", { buffer, fileName });
+export async function saveRecording(
+  buffer: ArrayBuffer,
+  fileName: string,
+  mimeType: string
+) {
+  const extension = mime.extension(mimeType);
+
+  return await ipcRenderer.invoke("save-recording", {
+    buffer,
+    fileName: `${fileName}.${extension}`,
+  });
 }
