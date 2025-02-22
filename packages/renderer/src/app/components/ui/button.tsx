@@ -42,7 +42,7 @@ export const Button: React.FC<ButtonProps> = ({
       {...{ onClick, disabled }}
       className={cn(
         'inline-flex cursor-pointer items-center rounded-full font-medium text-white transition-all',
-        'bg-gradient-to-r shadow-lg hover:shadow-xl',
+        'bg-gradient-to-r shadow-lg select-none hover:shadow-xl',
         'disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0',
         colorStyles[color],
         sizeStyles[size],

@@ -46,3 +46,7 @@ export async function requestMediaPermissions(): Promise<MediaPermissionRequest>
     };
   }
 }
+
+export async function saveRecording(buffer: ArrayBuffer, fileName: string) {
+  return await ipcRenderer.invoke("save-recording", { buffer, fileName });
+}
