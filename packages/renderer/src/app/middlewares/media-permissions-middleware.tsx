@@ -1,7 +1,7 @@
 import React from 'react'
 import { LoaderCircle } from 'lucide-react'
 import { useMediaPermissions } from '../hooks/use-media-permissions'
-import { Button } from './ui/button'
+import { Button } from '../components/ui/button'
 
 type MediaPermissionsMiddlewareProps = {
   children: React.ReactNode
