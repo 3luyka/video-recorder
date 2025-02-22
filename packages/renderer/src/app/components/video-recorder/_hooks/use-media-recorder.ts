@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { MIME_TYPE } from '../../config'
+import { MIME_TYPE } from '../../../../config'
 
 type UseMediaRecorderProps = {
   stream: MediaStream | null

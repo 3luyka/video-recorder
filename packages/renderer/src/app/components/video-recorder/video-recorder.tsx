@@ -1,5 +1,5 @@
-import { useCanvasRenderer } from '../../hooks/use-canvas-renderer'
-import { useMediaRecorder } from '../../hooks/use-media-recorder'
+import { useCanvasRenderer } from './_hooks/use-canvas-renderer'
+import { useMediaRecorder } from './_hooks/use-media-recorder'
 import { useMediaStream } from '../../providers/media-stream-provider'
 import { RecorderControls } from './recorder-controls'
 import { RecorderView } from './recorder-view'
