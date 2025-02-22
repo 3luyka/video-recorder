@@ -18,7 +18,13 @@ export const PlayerView: React.FC<PlayerViewProps> = ({
 
   return (
     <>
-      <video ref={videoRef} src={src} className="hidden" playsInline />
+      <video
+        ref={videoRef}
+        src={src}
+        className="hidden"
+        playsInline
+        preload="auto"
+      />
 
       <canvas
         ref={canvasRef}

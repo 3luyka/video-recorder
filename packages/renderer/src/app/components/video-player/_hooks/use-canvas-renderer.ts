@@ -41,7 +41,16 @@ export const useCanvasRenderer = ({ videoRef }: UseCanvasRendererProps) => {
       animationFrameRef.current = requestAnimationFrame(render)
     }
 
-    video.addEventListener('loadeddata', renderFrame)
+    const handleLoadedMetadata = () => {
+      video.currentTime = 0
+    }
+
+    const handleLoadedData = () => {
+      renderFrame()
+    }
+
+    video.addEventListener('loadedmetadata', handleLoadedMetadata)
+    video.addEventListener('loadeddata', handleLoadedData)
     video.addEventListener('timeupdate', handleTimeUpdate)
     video.addEventListener('play', render)
 
@@ -50,7 +59,8 @@ export const useCanvasRenderer = ({ videoRef }: UseCanvasRendererProps) => {
         cancelAnimationFrame(animationFrameRef.current)
       }
 
-      video.removeEventListener('loadeddata', renderFrame)
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata)
+      video.removeEventListener('loadeddata', handleLoadedData)
       video.removeEventListener('timeupdate', handleTimeUpdate)
       video.removeEventListener('play', render)
     }
